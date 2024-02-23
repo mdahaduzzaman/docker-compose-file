@@ -1,0 +1,34 @@
+
+version: "3.9"
+
+services:
+  # PostgreSQL database
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: my_database
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # pgAdmin web interface
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@example.com"
+      PGADMIN_DEFAULT_PASSWORD: "pgadmin123"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+
+networks:
+  # Internal network for communication between services
+  pgnet:
+    external: false

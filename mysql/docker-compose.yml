@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  # MySQL database
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: MYSQL_DATABASE
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # phpMyAdmin web interface
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "80:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: MYSQL_ROOT_PASSWORD
+      PMA_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+      # Optional: Set default email and password for phpMyAdmin
+      PHPMYADMIN_DEFAULT_EMAIL: PHPMYADMIN_DEFAULT_EMAIL
+      PHPMYADMIN_DEFAULT_PASSWORD: PHPMYADMIN_DEFAULT_PASSWORD
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:
+
+networks:
+  # Internal network for communication between services
+  dbnet:
+    external: false
